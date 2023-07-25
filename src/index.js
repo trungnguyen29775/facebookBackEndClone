@@ -1,26 +1,17 @@
 const express  = require('express')
 const app = express()
 const morgan = require('morgan')
+const db = require("./models");
 const cors = require('cors')
-app.use(cors())
-app.use(morgan('combined'))
+
 const port = 5000
 
-app.get('/api/search',(req,res)=>
-{
-    const searchQuery = req.query.q;
-    const data = handleData(searchQuery)
-    res.send(data)
+app.use(cors())
 
-})
+db.sequelize.sync()
 
-
-
-app.post('/',(req,res)=>
-{
-    res.send({
-        data:"got data"
-    })
+app.get('/',(req,res)=>{
+    res.send("hello")
 })
 
 app.listen(port,()=>
