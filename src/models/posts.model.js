@@ -5,7 +5,7 @@ const usersModel = require("./users.model");
 module.exports = (sequelize, Sequelize) => {
     const Posts = sequelize.define("posts", {
       post_id: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         primaryKey:true,
         autoIncrement: true
       },
@@ -25,17 +25,6 @@ module.exports = (sequelize, Sequelize) => {
     {
       timestamps: false
     });
-    Posts.belongsTo(usersModel, {
-        foreignKey: 'user_id'
-      });
-    usersModel.hasMany(Posts)
-    Posts.hasMany(user_comment_postModel)
-    user_comment_postModel.belongsTo(postsModel, {
-      foreignKey: 'post_id'
-    });
-    Posts.hasMany(reactionModel)
-    reactionModel.belongsTo(postsModel, {
-      foreignKey: 'post_id'
-    });
+   
     return Posts;
   };

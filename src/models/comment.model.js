@@ -1,10 +1,8 @@
-const postsModel = require("./posts.model");
-const user_comment_postModel = require("./user_comment_post.model");
 
 module.exports = (sequelize, Sequelize) => {
     const Comments = sequelize.define("comments", {
       comment_id: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         primaryKey:true,
         autoIncrement: true
       },
@@ -24,9 +22,6 @@ module.exports = (sequelize, Sequelize) => {
     {
       timestamps: false
     });
-    Comments.hasMany(user_comment_postModel);
-    user_comment_postModel.belongsTo(commentModel, {
-      foreignKey: 'comment_id'
-    });
+
     return Comments;
   };

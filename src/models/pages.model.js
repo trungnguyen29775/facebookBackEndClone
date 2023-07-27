@@ -3,7 +3,7 @@ const page_followModel = require("./page_follow.model");
 module.exports = (sequelize, Sequelize) => {
   const Pages = sequelize.define("pages", {
     page_id: {
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
@@ -19,10 +19,6 @@ module.exports = (sequelize, Sequelize) => {
   },
   {
     timestamps: false
-  });
-  Pages.hasMany(page_followModel)
-  page_followModel.belongsTo(pagesModel, {
-    foreignKey: 'page_id'
   });
   return Pages;
 };

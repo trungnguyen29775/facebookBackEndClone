@@ -16,9 +16,6 @@ module.exports = (sequelize, Sequelize) => {
   {
     timestamps: false
   });
-  FriendShip.hasMany(friendship_user_model)
-  friendship_user_model.belongsTo(friend_shipModel, {
-    foreignKey: 'friendship_id'
-  });
+  
   return FriendShip;
 };

@@ -17,13 +17,6 @@ module.exports = (sequelize, Sequelize) => {
   {
     timestamps: false
   });
-  Reaction.belongsTo(usersModel, {
-    foreignKey: 'user_id'
-  });
-  usersModel.hasMany(Reaction)
-  Reaction.belongsTo(postsModel, {
-    foreignKey: 'post_id'
-  });
-  postsModel.hasMany(Reaction)
+  
   return Reaction;
 };

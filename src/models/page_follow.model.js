@@ -13,13 +13,6 @@ module.exports = (sequelize, Sequelize) => {
   {
     timestamps: false
   });
-  PageFollow.belongsTo(usersModel, {
-    foreignKey: 'user_id'
-  });
-  usersModel.hasMany(PageFollow)
-  PageFollow.belongsTo(pagesModel, {
-    foreignKey: 'page_id'
-  });
-  pagesModel.hasMany(PageFollow)
+ 
   return PageFollow;
 };

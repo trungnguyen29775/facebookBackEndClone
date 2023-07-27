@@ -14,17 +14,6 @@ module.exports = (sequelize, Sequelize) => {
   {
     timestamps: false
   });
-  UserCommentPost.belongsTo(usersModel, {
-    foreignKey: 'user_id'
-  });
-  usersModel.hasMany(UserCommentPost)
-  UserCommentPost.belongsTo(commentModel, {
-    foreignKey: 'comment_id'
-  });
-  commentModel.hasMany(UserCommentPost)
-  UserCommentPost.belongsTo(postsModel, {
-    foreignKey: 'post_id'
-  });
-  postsModel.hasMany(UserCommentPost)
+  
   return UserCommentPost;
 };
