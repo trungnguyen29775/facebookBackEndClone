@@ -13,9 +13,7 @@ app.use(bodyParser.json());
 
 // db.sequelize.sync({alter:true})
 
-app.get('/',(req,res)=>{
-    res.send("hello")
-})
+
 
 require('./controller/user.controller')(app)
 
