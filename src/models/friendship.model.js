@@ -1,11 +1,18 @@
 const { DataTypes } = require('sequelize');
-const friendship_user_model = require('./friendship_user_model');
 module.exports = (sequelize, Sequelize) => {
-  const FriendShip = sequelize.define("friendship", {
+  const Friendship = sequelize.define("friendship", {
     friendship_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
+    },
+    friend_user_name:{
+      type: Sequelize.STRING,
+      allowNull:false
+    },
+    status:{
+      type:Sequelize.STRING,
+      allowNull:false
     },
     add_friend_date: {
       type: Sequelize.DATEONLY,
@@ -17,5 +24,5 @@ module.exports = (sequelize, Sequelize) => {
     timestamps: false
   });
   
-  return FriendShip;
+  return Friendship;
 };

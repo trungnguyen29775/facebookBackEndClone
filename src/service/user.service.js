@@ -1,4 +1,6 @@
+const e = require('cors');
 const db = require('../models')
+const { Op } = require('sequelize');
 const User = db.Users
 exports.create = async (req,res) => 
 {
@@ -27,7 +29,7 @@ exports.create = async (req,res) =>
     }
 }
 
-exports.findOne = (req, res) => {
+exports.login = (req, res) => {
     User.findOne(
         {
         where: {
@@ -62,17 +64,38 @@ exports.findOne = (req, res) => {
       });
 };
 
-exports.findAll = (req, res) => {
+exports.homeSearch = (req, res) => {
     User.findAll(
         {
-            where:
-            {
-
-            }
+          where: {
+            [Op.or]: [
+              {
+                first_name: {
+                  [Op.like]: `%${req.query.q}%`
+                }
+              },
+              {
+                last_name: {
+                  [Op.like]: `%${req.query.q}%`
+                }
+              }
+            ]
+          }
         }
     )
       .then(data => {
-        res.send(data);
+        let usersData =[]
+        data.map((item)=>
+        {
+          let userData ={
+            userName:item.user_name,
+            firstName:item.first_name,
+            lastName:item.last_name,
+            avtFilePath:item.avt_file_path
+          }
+          usersData.push(userData)
+        })
+        res.send(usersData)
       })
       .catch(err => {
         res.status(500).send({
@@ -81,6 +104,40 @@ exports.findAll = (req, res) => {
         });
       });
 };
+
+exports.suggestFriend = (req, res) => {
+  User.findAll(
+      {
+        where: {
+          user_name: {
+            [Op.not]: "trungnguyen29775@gmail.com"
+          }
+        }
+      }
+  )
+    .then(data => {
+      let usersData =[]
+      data.map((item)=>
+      {
+        let userData ={
+          userName:item.user_name,
+          firstName:item.first_name,
+          lastName:item.last_name,
+          avtFilePath:item.avt_file_path
+        }
+        usersData.push(userData)
+      })
+      res.send(usersData)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving User."
+      });
+    });
+};
+
 
 exports.update = (req,res)=>
 {
