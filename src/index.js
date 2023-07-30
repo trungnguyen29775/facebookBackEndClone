@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 
 
 require('./controller/user.controller')(app)
+require('./controller/friendship.controller')(app)
 
 
 app.listen(port,()=>

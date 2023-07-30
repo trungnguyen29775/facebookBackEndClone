@@ -7,6 +7,7 @@ module.exports = app =>
     router.post('/login',userService.login)
     router.post('/search',userService.homeSearch)
     router.post('/sugesst',userService.suggestFriend)
+    router.post('/home-contact',userService.findContact)
     app.use('/',router);
 }
 

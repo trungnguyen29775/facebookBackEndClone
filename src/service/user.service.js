@@ -1,6 +1,6 @@
-const e = require('cors');
 const db = require('../models')
 const { Op } = require('sequelize');
+const FriendShip = db.Friendship
 const User = db.Users
 exports.create = async (req,res) => 
 {
@@ -105,16 +105,66 @@ exports.homeSearch = (req, res) => {
       });
 };
 
-exports.suggestFriend = (req, res) => {
-  User.findAll(
-      {
-        where: {
-          user_name: {
-            [Op.not]: "trungnguyen29775@gmail.com"
+exports.findContact = (req,res)=>{
+  FriendShip.findAll({
+    where:{
+      user_name:req.body.userName,
+      status: 'accepted'
+    }
+  })
+  .then(data=>
+    {
+      let targetUserNames =[]
+      data.map(item=>targetUserNames.push(item.friend_user_name))
+      return User.findAll({
+        where:{
+          user_name:{
+            [Op.in]:targetUserNames
           }
         }
-      }
-  )
+      })
+    })
+    .then(result=>{
+      let responseDatas = []
+      result.map(item=>
+        {
+          let responseData = {
+            userName: item.user_name,
+            avtFilePath:item.avt_file_path,
+            firstName:item.first_name,
+            lastName:item.last_name,
+          }
+          responseDatas.push(responseData)
+        })
+      res.status(200).send(responseDatas)
+    })
+    .catch(e=>
+      res.status(500).send(e)
+      )
+}
+
+
+
+exports.suggestFriend = (req, res) => {
+ FriendShip.findAll({
+    where:{
+      user_name:req.body.userName,
+      status: 'accepted'
+    }
+  })
+  .then(data=>
+    {
+      let friendUserNames =[]
+      data.map(item=>friendUserNames.push(item.friend_user_name))
+      return User.findAll({
+        where:{
+          user_name:{
+            [Op.notIn]:friendUserNames,
+            [Op.not]:req.body.userName
+          }
+        }
+      })
+    })
     .then(data => {
       let usersData =[]
       data.map((item)=>

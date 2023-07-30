@@ -25,7 +25,7 @@ exports.addFriend = async (req,res) =>
 
         await FriendShip.create(currentUserDataAddFriend)
         await FriendShip.create(targetUserDataAddFriend)
-          res.send('Store data friendship Succeed with data ')
+        res.status(200).send('Store friendship in database succed')
     }
   }
     catch(err)
@@ -33,6 +33,8 @@ exports.addFriend = async (req,res) =>
       res.status(500).send('Failed to store user in database')
     }
 }
+
+
 
 // exports.login = (req, res) => {
 //     User.findOne(
