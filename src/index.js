@@ -1,27 +1,25 @@
 const express  = require('express')
 const app = express()
+const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const db = require("./models");
 const cors = require('cors')
-app.use(cors())
-app.use(morgan('combined'))
+
 const port = 5000
 
-app.get('/api/search',(req,res)=>
-{
-    const searchQuery = req.query.q;
-    const data = handleData(searchQuery)
-    res.send(data)
+app.use(cors())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-})
+// db.sequelize.sync({alter:true})
 
 
 
-app.post('/',(req,res)=>
-{
-    res.send({
-        data:"got data"
-    })
-})
+
+
+require('./controller/user.controller')(app)
+require('./controller/friendship.controller')(app)
+
 
 app.listen(port,()=>
 {
