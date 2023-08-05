@@ -148,8 +148,7 @@ exports.findContact = (req,res)=>{
 exports.suggestFriend = (req, res) => {
  FriendShip.findAll({
     where:{
-      user_name:req.body.userName,
-      status: 'accepted'
+      user_name:req.body.userName
     }
   })
   .then(data=>
@@ -173,7 +172,8 @@ exports.suggestFriend = (req, res) => {
           userName:item.user_name,
           firstName:item.first_name,
           lastName:item.last_name,
-          avtFilePath:item.avt_file_path
+          avtFilePath:item.avt_file_path,
+          status:null
         }
         usersData.push(userData)
       })
@@ -188,6 +188,43 @@ exports.suggestFriend = (req, res) => {
     });
 };
 
+exports.findAddFriendRequest = (req,res)=>{
+  FriendShip.findAll({
+    where:{
+      user_name:req.body.userName,
+      status: 'pending'
+    }
+  })
+  .then(data=>
+    {
+      let targetUserNames =[]
+      data.map(item=>targetUserNames.push(item.friend_user_name))
+      return User.findAll({
+        where:{
+          user_name:{
+            [Op.in]:targetUserNames
+          }
+        }
+      })
+    })
+    .then(result=>{
+      let responseDatas = []
+      result.map(item=>
+        {
+          let responseData = {
+            userName: item.user_name,
+            avtFilePath:item.avt_file_path,
+            firstName:item.first_name,
+            lastName:item.last_name,
+          }
+          responseDatas.push(responseData)
+        })
+      res.status(200).send(responseDatas)
+    })
+    .catch(e=>
+      res.status(500).send(e)
+      )
+}
 
 exports.update = (req,res)=>
 {

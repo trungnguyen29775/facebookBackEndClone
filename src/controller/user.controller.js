@@ -8,6 +8,8 @@ module.exports = app =>
     router.post('/search',userService.homeSearch)
     router.post('/sugesst',userService.suggestFriend)
     router.post('/home-contact',userService.findContact)
+    router.post('/friend-request',userService.findAddFriendRequest)
+
     app.use('/',router);
 }
 
