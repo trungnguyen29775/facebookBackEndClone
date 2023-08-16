@@ -35,27 +35,60 @@ exports.createFriendShip = async (req,res) =>
 }
 
 exports.destroyFriendShip = async (req, res) => {
-    FriendShip.destroy({
-      where: {
-        [Op.or]: [
-          { 
-            user_name: req.body.currentUser,
-            friend_user_name:req.body.targetUser
-           },
-            { 
-            user_name: req.body.targetUser,
-            friend_user_name: req.body.currentUser
-           },
-        ],
-      },
-    })
+  FriendShip.destroy({
+    where: {
+      [Op.or]: [
+        {
+          user_name: req.body.currentUser,
+          friend_user_name: req.body.targetUser
+        },
+        {
+          user_name: req.body.targetUser,
+          friend_user_name: req.body.currentUser
+        }
+      ]
+    }
+  })
     .then((result) => {
-      res.status(200).send("Delete Friend Request")
-    }).catch((err) => {
-      res.status(500).send(err)
+      res.status(200).send("Delete Friend Request");
+    })
+    .catch((err) => {
+      res.status(500).send(err);
     });
 };
 
+
+exports.updateFriendShip = async (req, res) => {
+  try{
+    const currentUserFriendShip = await FriendShip.findOne({
+      where:{
+        user_name:req.body.currentUserName,
+        friend_user_name:req.body.targetUserName
+      }
+    })
+    const targetUserFriendShip = await FriendShip.findOne({
+      where:{
+        user_name:req.body.targetUserName,
+        friend_user_name:req.body.currentUserName
+      }
+    })
+    const newCurrentUserFriendShip = {
+      ...currentUserFriendShip,
+      status:"accepted"
+    }
+    const newTargetUserFriendShip = {
+      ...targetUserFriendShip,
+      status:"accepted"
+    }
+    await currentUserFriendShip.update(newCurrentUserFriendShip)
+    await targetUserFriendShip.update(newTargetUserFriendShip)
+    res.status(200).send("Accept Friend!!")
+  }
+  catch(err)
+  {
+    res.status(500).send(err)
+  }
+};
 
 
 

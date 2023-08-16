@@ -5,6 +5,7 @@ module.exports = app =>
     var router = require('express').Router();
     router.post('/add-friend',friendshipService.createFriendShip)
     router.post('/remove-friend-request',friendshipService.destroyFriendShip)
+    router.put('/accept-friend',friendshipService.updateFriendShip)
     app.use('/',router);
 }
 

@@ -248,6 +248,32 @@ exports.update = (req,res)=>
       });
 }
 
+exports.findInfo = (req,res)=>{
+  User.findOne({
+    where:{
+      user_name:req.params.targetUserName
+    }
+  })
+  .then(data=>{
+    let responseData = {
+      userName: data.user_name,
+      avtFilePath:data.avt_file_path,
+      firstName:data.first_name,
+      lastName:data.last_name,
+    }
+    res.send(responseData)
+  })
+  .catch(e=>{
+    res.send(e)
+  })
+}
+exports.message = (req,res)=>{
+  const currentUserName = req.params.currentUserName;
+  const targetUserName = req.params.targetUserName;
+  res.send(`From ${currentUserName} to ${targetUserName}`)
+}
+
+
 exports.destroy = (req,res)=>
 {
     const userId = req.body.userId;
