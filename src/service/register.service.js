@@ -6,9 +6,9 @@ exports.checkValidEmail = async(req,res)=>
     
     axios.get(`http://apilayer.net/api/check?access_key=${apiKey}&email=${email}`)
       .then(response => {
-        const { format_valid, smtp_check } = response.data;
+        const {mx_found } = response.data;
 
-        if (format_valid && smtp_check) {
+        if (mx_found) {
          res.send('Valid email')
         } else {
             res.send('Invalid email')
