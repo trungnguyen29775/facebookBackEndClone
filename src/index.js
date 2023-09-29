@@ -25,6 +25,9 @@ app.use(bodyParser.json());
 require('./controller/user.controller')(app)
 require('./controller/friendship.controller')(app)
 
+// Route
+require('./controller/register.controller')(app)
+
 const io = new Server(httpServer, {
   cors: {
     origin: "http://localhost:3000"
@@ -41,9 +44,8 @@ io.on("connection", (socket) => {
    })
 
    socket.on('sendMess',(data)=>{
-    const currentUserName = data.sender
     const targetUserName = data.receiver
-    socket.join([currentUserName,targetUserName])
+    socket.join(targetUserName)
     io.to(targetUserName).emit('receivedMessage',{sender:data.sender,message:data.message, receiver:data.receiver})
    })
 
