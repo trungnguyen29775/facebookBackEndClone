@@ -1,26 +1,37 @@
 const db = require('../models')
 const { Op } = require('sequelize');
+const bcrypt = require('bcryptjs');
+
 const FriendShip = db.Friendship
 const User = db.Users
 exports.create = async (req,res) => 
 {
     try{
     {
-        const user = 
-        {   
-            user_name:req.body.userName,
-            password:req.body.registerPassword,
-            first_name:req.body.registerFirstName,
-            last_name:req.body.registerLastName,
-            dob:req.body.dob,
-            gender:req.body.gender,
-            avt_file_path:req.body.avtFilePath
-
-        }
-        
-
+      const password = req.body.registerPassword
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(password, salt, async(err, hash) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          const hashedPassword = hash;
+          const user = 
+          {   
+              user_name:req.body.userName,
+              password:hashedPassword,
+              first_name:req.body.registerFirstName,
+              last_name:req.body.registerLastName,
+              dob:req.body.dob,
+              gender:req.body.gender,
+              avt_file_path:req.body.avtFilePath
+  
+          }
         await User.create(user)
-          res.send('Store User Succeed with data ')
+        res.status(200).send( user)
+
+        });
+      });
     }
   }
     catch(err)
@@ -39,22 +50,31 @@ exports.login = (req, res) => {
     )
       .then(result => {
         const userData = result.dataValues
-        if(userData.password===req.body.password)
-        res.status(200).json({
-          message: 'Authentication successful',
-          userName: userData.user_name,
-          avtFilePath: userData.avt_file_path,
-          dob: userData.dob,
-          firstName: userData.first_name,
-          lastName:userData.last_name,
-          gender: userData.gender
-          
-        });
-        else
-        res.status(401).json({
-          message: 'Authentication failed',
-          error: 'Invalid username or password'
-        });
+        bcrypt.compare(req.body.password, userData.password, (err, isMatch) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        
+          if (isMatch) {
+            res.status(200).json({
+              message: 'Authentication successful',
+              userName: userData.user_name,
+              avtFilePath: userData.avt_file_path,
+              dob: userData.dob,
+              firstName: userData.first_name,
+              lastName:userData.last_name,
+              gender: userData.gender
+              
+            });
+          } else {
+            res.status(401).json({
+              message: 'Authentication failed',
+              error: 'Invalid username or password'
+            });
+          }
+        })
+        
       })
       .catch(err => {
         res.status(500).send({

@@ -9,9 +9,9 @@ exports.checkValidEmail = async(req,res)=>
         const {mx_found } = response.data;
 
         if (mx_found) {
-         res.send('Valid email')
+         res.status(200).send('Valid email')
         } else {
-            res.send('Invalid email')
+            res.status(500).send('Invalid email')
 
         }
       })
